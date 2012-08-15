@@ -12,14 +12,26 @@ import java.net.URL;
  * @since alpha
  */
 public class PixalUtils {
+	private static String cachedUsername = "";
 	private static String cachedIP = "";
 	
 	public static String getLocalHostname() {
-		return System.getProperty("user.name") + "@localhost";
+		return PixalUtils.getUsername() + "@localhost";
 	}
 	
 	public static String getPublicHostname() {
-		return System.getProperty("user.name") + "@" + PixalUtils.getIPAddress();
+		return PixalUtils.getUsername() + "@" + PixalUtils.getIPAddress();
+	}
+	
+	public static String getUsername() {
+		if (cachedUsername.isEmpty()) {
+			if (System.getProperty("user.name").isEmpty()) {
+				cachedUsername = "Pixal";
+			} else {
+				cachedUsername = System.getProperty("user.name");
+			}
+		}
+		return cachedUsername;
 	}
 	
 	public static String getIPAddress() {
