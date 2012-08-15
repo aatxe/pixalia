@@ -10,6 +10,7 @@ import us.aaronweiss.pixalia.input.TextInputHandler;
 import us.aaronweiss.pixalia.lwjgl.BinaryFont;
 import us.aaronweiss.pixalia.lwjgl.Window;
 import us.aaronweiss.pixalia.tools.Constants;
+import us.aaronweiss.pixalia.tools.PixalUtils;
 
 public class Game extends Window {
 	private Pixal player;
@@ -26,7 +27,7 @@ public class Game extends Window {
 		this.chatInput = new TextInputHandler();
 		this.ui = new UI(width, height);
 		this.world = new World();
-		this.player = new Pixal("Aaron@localhost");
+		this.player = new Pixal(PixalUtils.getLocalHostname());
 		this.world.put(player.getHostname(), player);
 		for (int i = 0; i < 100; i++) {
 			this.world.put(String.valueOf(i), new Pixal(String.valueOf(i)));
