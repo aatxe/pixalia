@@ -6,7 +6,7 @@ Pixalia is a free, open source massively multiplayer online (MMO, thought it's a
 * Netty, for networking.
 * LWJGL, for rendering.
 * JInput, for input.
-* Guava, for utilities.
+* Guava, for utilities.  
 n.b. Maven is nice enough to actually handle all of the dependencies.
 
 ### Acknowledgements ###
