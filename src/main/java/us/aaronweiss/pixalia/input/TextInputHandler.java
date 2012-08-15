@@ -16,14 +16,15 @@ import org.lwjgl.input.Keyboard;
 public class TextInputHandler {
 	private final Map<Character, Character> keymap = new HashMap<Character, Character>();
 	private final List<Character> allowed = new ArrayList<Character>();
+	private final String lang = "en-US";
 	private String input;
 	private boolean isShifted = false;
 	
 	public TextInputHandler() throws LWJGLException, IOException {
 		Keyboard.create();
 		this.input = "";
-		this.loadKeymap("keymap.properties");
-		this.loadAllowed("allowed.txt");
+		this.loadKeymap("rsc/lang/" + lang + "/keymap.properties");
+		this.loadAllowed("rsc/lang/" + lang + "/allowed.txt");
 	}
 	
 	private void loadKeymap(String path) throws IOException {

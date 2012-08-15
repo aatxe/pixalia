@@ -22,7 +22,7 @@ public class Game extends Window {
 	public Game() throws LWJGLException, IOException {
 		super(800, 600);
 		this.setTitle("Pixalia");
-		BinaryFont.setDefault(new BinaryFont("Unifont.bin"));
+		BinaryFont.setDefault(new BinaryFont("rsc/Unifont.bin"));
 		this.chatInput = new TextInputHandler();
 		this.ui = new UI(width, height);
 		this.world = new World();
