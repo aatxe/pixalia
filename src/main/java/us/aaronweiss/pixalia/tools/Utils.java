@@ -1,5 +1,7 @@
 package us.aaronweiss.pixalia.tools;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,16 +13,16 @@ import java.net.URL;
  * @version 1.0
  * @since alpha
  */
-public class PixalUtils {
+public class Utils {
 	private static String cachedUsername = "";
 	private static String cachedIP = "";
 	
 	public static String getLocalHostname() {
-		return PixalUtils.getUsername() + "@localhost";
+		return Utils.getUsername() + "@localhost";
 	}
 	
 	public static String getPublicHostname() {
-		return PixalUtils.getUsername() + "@" + PixalUtils.getIPAddress();
+		return Utils.getUsername() + "@" + Utils.getIPAddress();
 	}
 	
 	public static String getUsername() {
@@ -53,5 +55,9 @@ public class PixalUtils {
 			cachedIP = ip;
 		}
 		return cachedIP;
+	}
+	
+	public static String readString(int length, ByteBuf b) {
+		return b.readBytes(length).toString();
 	}
 }

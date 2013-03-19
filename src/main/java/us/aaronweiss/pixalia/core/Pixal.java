@@ -1,9 +1,14 @@
 package us.aaronweiss.pixalia.core;
 
 import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import us.aaronweiss.pixalia.tools.Vector;
 
 public class Pixal {
+    private static final Logger logger = LoggerFactory.getLogger(Pixal.class);
 	private final String hostname;
 	private Random randomizer;
 	private Vector position;
@@ -16,6 +21,7 @@ public class Pixal {
 		// this.position = new Vector(0f, 0f);
 		this.position = new Vector(this.randomizer.nextInt(100) * 8, this.randomizer.nextInt(75) * 8);
 		this.color = new Vector(randomizer.nextFloat(), randomizer.nextFloat(), randomizer.nextFloat(), 1f);
+		logger.info("New Pixal created. (" + this.hostname + ")");
 	}
 	
 	public String getHostname() {

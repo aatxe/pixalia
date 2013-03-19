@@ -63,6 +63,7 @@ public abstract class Window {
 			Display.update();
 			Display.sync(60);
 		}
+		updateTimer.stop();
 		fpsTimer.stop();
 		this.dispose();
 		Display.destroy();

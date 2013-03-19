@@ -1,7 +1,16 @@
 package us.aaronweiss.pixalia.tools;
 
+import java.nio.ByteOrder;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+
 public class Vector {
 	private float x, y, z, w;
+	
+	public Vector(float x) {
+		this(x, 0f);
+	}
 	
 	public Vector(float x, float y) {
 		this(x, y, 0f);
@@ -70,5 +79,34 @@ public class Vector {
 			return null;
 		}
 		return vec;
+	}
+	
+	public ByteBuf asByteBuf(int n) {
+		ByteBuf ret = Unpooled.buffer().order(ByteOrder.LITTLE_ENDIAN);
+		float vec[] = this.asFloatArray(n);
+		for (float f : vec) {
+			ret.writeFloat(f);
+		}
+		return ret;
+	}
+	
+	public static Vector fromByteBuf(int n, ByteBuf b) {
+		Vector ret;
+		switch (n) {
+		case 1:
+			ret = new Vector(b.readFloat());
+			break;
+		case 2:
+			ret = new Vector(b.readFloat(), b.readFloat());
+			break;
+		case 3:
+			ret = new Vector(b.readFloat(), b.readFloat(), b.readFloat());
+			break;
+		default:
+		case 4:
+			ret = new Vector(b.readFloat(), b.readFloat(), b.readFloat(), b.readFloat());
+			break;
+		}
+		return ret;
 	}
 }
