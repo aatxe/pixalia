@@ -24,6 +24,7 @@ public class Game extends Window {
 	private static EventBus eventBus;
 	private final Player player;
 	private final World world;
+	private final Network network;
 	private final UI ui;
 	private final GameInputHandler input;
 	
@@ -33,8 +34,12 @@ public class Game extends Window {
 		BinaryFont.setDefault(new BinaryFont("rsc/Unifont.bin"));
 		this.ui = new UI(width, height);
 		this.world = new World();
+		if (!Constants.OFFLINE_MODE)
+			this.network = new Network(this);
+		else 
+			this.network = null;
 		this.player = new Player(Utils.getLocalHostname());
-		this.input = new GameInputHandler(this.player, this.ui);
+		this.input = new GameInputHandler(this);
 		this.world.put(player.getHostname(), player);
 	}
 
@@ -91,6 +96,10 @@ public class Game extends Window {
 	
 	public Player getPlayer() {
 		return this.player;
+	}
+	
+	public Network getNetwork() {
+		return this.network;
 	}
 	
 	public World getWorld() {
