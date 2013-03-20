@@ -22,7 +22,7 @@ import com.google.common.eventbus.EventBus;
 public class Game extends Window {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
 	private static EventBus eventBus;
-	private final Pixal player;
+	private final Player player;
 	private final World world;
 	private final UI ui;
 	private final GameInputHandler input;
@@ -33,7 +33,7 @@ public class Game extends Window {
 		BinaryFont.setDefault(new BinaryFont("rsc/Unifont.bin"));
 		this.ui = new UI(width, height);
 		this.world = new World();
-		this.player = new Pixal(Utils.getLocalHostname());
+		this.player = new Player(Utils.getLocalHostname());
 		this.input = new GameInputHandler(this.player, this.ui);
 		this.world.put(player.getHostname(), player);
 	}
@@ -87,6 +87,10 @@ public class Game extends Window {
 		GL11.glLoadIdentity();
 		GL11.glViewport(0, 0, width, height);
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+	}
+	
+	public Player getPlayer() {
+		return this.player;
 	}
 	
 	public World getWorld() {

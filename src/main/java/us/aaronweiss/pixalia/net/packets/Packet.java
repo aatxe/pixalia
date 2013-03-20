@@ -18,6 +18,11 @@ public abstract class Packet {
 		this.buffer = Unpooled.buffer().order(ByteOrder.LITTLE_ENDIAN);
 	}
 	
+	protected void ready() {
+		this.buffer.resetReaderIndex();
+		this.buffer.readByte();
+	}
+	
 	public byte[] array() {
 		return this.buffer.array();
 	}

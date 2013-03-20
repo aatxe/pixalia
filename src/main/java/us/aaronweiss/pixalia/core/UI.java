@@ -26,6 +26,8 @@ public class UI implements Renderable {
 
 	public void toggleChat() {
 		chat.toggleVisibility();
+		if (chat.isVisible())
+			chatNotifier.messageRead();
 	}
 	
 	public void toggleFPS() {
@@ -65,8 +67,10 @@ public class UI implements Renderable {
 		}
 	}
 	
-	public void addChatLine(String line) {
-		chat.addChatLine(line);
+	public void addChatLine(String speaker, String line) {
+		chat.addChatLine(speaker, line);
+		if (!chat.isVisible())
+			chatNotifier.newMessage();
 	}
 
 	public void dispose() {

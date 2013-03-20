@@ -4,12 +4,15 @@ import java.io.IOException;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import us.aaronweiss.pixalia.core.Pixal;
 import us.aaronweiss.pixalia.core.UI;
 import us.aaronweiss.pixalia.tools.Constants;
 
 public class GameInputHandler {
+    private static final Logger logger = LoggerFactory.getLogger(GameInputHandler.class);
 	private boolean jtChat = false, jtUtil = false, jtSend = false;
 	private final TextInputHandler chatInput;
 	private final Pixal player;
@@ -27,10 +30,10 @@ public class GameInputHandler {
 				if (!jtSend && this.chatInput.getText().isEmpty() || this.chatInput.getText().equalsIgnoreCase(" ")) {
 					this.ui.toggleChat();
 				} else {
-					String message = this.player.getHostname() + ": " + this.chatInput.getText();
-					if (!message.equals(this.player.getHostname() + ": ")) {
-						System.out.println(message);
-						this.ui.addChatLine(message);
+					String message = this.chatInput.getText();
+					if (!message.equals(" ")) {
+						logger.debug(this.player.getHostname() + ": " + message);
+						this.ui.addChatLine(this.player.getHostname(), message);
 						this.chatInput.reset();
 						this.jtSend = true;
 					}

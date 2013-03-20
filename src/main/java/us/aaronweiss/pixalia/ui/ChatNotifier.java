@@ -52,6 +52,14 @@ public class ChatNotifier implements Renderable {
 		vbo = -1;
 	}
 	
+	public void newMessage() {
+		this.newMessage = true;
+	}
+	
+	public void messageRead() {
+		this.newMessage = false;
+	}
+	
 	/**
 	 * Creates a vertex buffer object ex nihilo.
 	 * @return the id of the new vbo.

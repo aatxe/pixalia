@@ -3,13 +3,18 @@ package us.aaronweiss.pixalia.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import us.aaronweiss.pixalia.net.listeners.HandshakeListener;
+import us.aaronweiss.pixalia.net.listeners.MessageListener;
+import us.aaronweiss.pixalia.net.listeners.MovementListener;
 
 public class Network {
-    private static final Logger logger = LoggerFactory.getLogger(Network.class);
-    
+	private static final Logger logger = LoggerFactory.getLogger(Network.class);
+
 	public Network(Game game) {
-		// TODO: register listeners
-		Game.getEventBus().register(null);
+		// TODO: register moar listeners
+		Game.getEventBus().register(new HandshakeListener(game)); // 0x01
+		Game.getEventBus().register(new MovementListener(game)); // 0x02
+		Game.getEventBus().register(new MessageListener(game)); // 0x03
 		logger.info("Registered listeners with event bus.");
 	}
 }

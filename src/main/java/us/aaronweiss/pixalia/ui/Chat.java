@@ -77,11 +77,11 @@ public class Chat extends HideableUIElement {
 		this.renderText = " > " + value;
 	}
 	
-	public void addChatLine(String line) {
+	public void addChatLine(String speaker, String line) {
 		for (int i = 1; i < entries.length; i++) {
 			entries[i - 1] = entries[i];
 		}
-		entries[entries.length - 1] = GLStringUtils.getString(line);
+		entries[entries.length - 1] = GLStringUtils.getString(speaker + ": " + line);
 	}
 	
 	public void dispose() {

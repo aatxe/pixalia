@@ -1,5 +1,7 @@
 package us.aaronweiss.pixalia.net.packets;
 
+import us.aaronweiss.pixalia.tools.Utils;
+
 public class VHostChangeRequestPacket extends Packet {
 	public static final byte OPCODE = 0x04;
 	
@@ -14,6 +16,22 @@ public class VHostChangeRequestPacket extends Packet {
 		this.packetType = PacketType.OUTBOUND;
 		this.buffer.writeByte(desiredVHost.getBytes().length);
 		this.buffer.writeBytes(desiredVHost.getBytes());
+	}
+	
+	public boolean status() {
+		this.ready();
+		if (this.packetType.is(PacketType.INBOUND)) {
+			return this.buffer.readBoolean();
+		}
+		return false;
+	}
+	
+	public String virtualHost() {
+		this.ready();
+		if (this.packetType.is(PacketType.OUTBOUND)) {
+			return Utils.readString(this.buffer.readInt(), this.buffer);
+		}
+		return null;
 	}
 	
 	public static VHostChangeRequestPacket newInboundPacket(boolean status) {
