@@ -1,5 +1,5 @@
 # Pixalia #
-Pixalia is a free, open source massively multiplayer online (FOSMMO, thought it's actually not massive) game and thought experiment. It's based around the idea that people often don't realize how quickly they are judged, and included (or excluded) based on appearance. Admittedly, this was somewhat of an after-thought, and the game is mostly just a learning experience. This is the client for the game, the server is [currently unavailable](https://www.github.com/aaronweiss74).
+Pixalia is a free, open source massively multiplayer online (FOSMMO, thought it's actually not massive) game and thought experiment. It's based around the idea that people often don't realize how quickly they are judged, and included (or excluded) based on appearance. Admittedly, this was somewhat of an after-thought, and the game is mostly just a learning experience. This is the client for the game, the server is [available on  GitHub](https://www.github.com/aaronweiss74/pixalia-server).
 
 ### Requirements ###
 * Maven, as a build system.
