@@ -60,4 +60,12 @@ public class Utils {
 	public static String readString(int length, ByteBuf b) {
 		return b.readBytes(length).toString();
 	}
+	
+	public static String toHexString(byte[] array) {
+		String ret = "";
+		for (byte b : array) {
+			ret += Integer.toHexString(b) + " ";
+		}
+		return ret;
+	}
 }

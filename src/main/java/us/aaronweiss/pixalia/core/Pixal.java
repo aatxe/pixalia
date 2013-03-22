@@ -1,12 +1,8 @@
 package us.aaronweiss.pixalia.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import us.aaronweiss.pixalia.tools.Vector;
 
 public class Pixal {
-    private static final Logger logger = LoggerFactory.getLogger(Pixal.class);
 	private final String hostname;
 	private Vector position;
 	protected Vector color;
@@ -15,7 +11,6 @@ public class Pixal {
 		this.hostname = hostname;
 		this.position = new Vector(0f, 0f);
 		this.color = new Vector(0f, 0f, 0f, 1f);
-		logger.info("New Pixal created. (" + this.hostname + ")");
 	}
 	
 	public String getHostname() {

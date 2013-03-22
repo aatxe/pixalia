@@ -13,11 +13,14 @@ import us.aaronweiss.pixalia.core.Player;
 import us.aaronweiss.pixalia.core.UI;
 import us.aaronweiss.pixalia.net.packets.MessagePacket;
 import us.aaronweiss.pixalia.net.packets.MovementPacket;
+import us.aaronweiss.pixalia.tools.Configuration;
 import us.aaronweiss.pixalia.tools.Constants;
+import us.aaronweiss.pixalia.tools.Vector;
 
 public class GameInputHandler {
     private static final Logger logger = LoggerFactory.getLogger(GameInputHandler.class);
 	private boolean jtChat = false, jtUtil = false, jtSend = false;
+	private Vector lastPos;
 	private float ticksSinceUpdate = 0;
 	private final TextInputHandler chatInput;
 	private final Player player;
@@ -29,6 +32,7 @@ public class GameInputHandler {
 		this.player = game.getPlayer();
 		this.network = game.getNetwork();
 		this.ui = game.getUI();
+		lastPos = this.player.getPosition();
 	}
 	
 	public void controlChat(float ticksPassed) {
@@ -37,7 +41,7 @@ public class GameInputHandler {
 				if (!jtSend && this.chatInput.getText().isEmpty() || this.chatInput.getText().equalsIgnoreCase(" ")) {
 					this.ui.toggleChat();
 				} else {
-					if (Constants.OFFLINE_MODE) {
+					if (Configuration.offlineMode()) {
 						this.offlineChat(ticksPassed);
 					} else {
 						this.onlineChat(ticksPassed);
@@ -88,8 +92,10 @@ public class GameInputHandler {
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
 			this.player.move((rate / tps) * ticksPassed, 0);
 		}
-		if (this.ticksSinceUpdate >= Constants.TICKS_FOR_MOVEMENT_UPDATE && network != null) {
+		if (!this.player.getPosition().equals(this.lastPos) && !Configuration.offlineMode() && this.ticksSinceUpdate >= Constants.TICKS_FOR_MOVEMENT_UPDATE) {
 			network.write(MovementPacket.newOutboundPacket(this.player.getPosition()));
+			this.lastPos = this.player.getPosition();
+			this.ticksSinceUpdate = 0;
 		}
 		while (Keyboard.next()) {
 			switch (Keyboard.getEventKey()) {

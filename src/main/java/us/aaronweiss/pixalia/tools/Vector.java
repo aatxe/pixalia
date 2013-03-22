@@ -59,6 +59,19 @@ public class Vector {
 		return this.w;
 	}
 	
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (!o.getClass().equals(Vector.class))
+			return false;
+		Vector v = (Vector) o;
+		return comparef(v.w, w) && comparef(v.x, x) && comparef(v.y, y) && comparef(v.z, y);
+	}
+	
+	private static boolean comparef(float a, float b) {
+		return (a - .05 < b && a + .05 > b);
+	}
+	
 	public float[] asFloatArray(int n) {
 		float vec[] = new float[n];
 		if (n >= 4) {

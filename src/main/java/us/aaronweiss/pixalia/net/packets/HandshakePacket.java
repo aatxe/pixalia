@@ -15,15 +15,19 @@ public class HandshakePacket extends Packet {
 		this.hasVhost = false;
 	}
 	
-	private HandshakePacket() {
+	private HandshakePacket(String username) {
 		super(OPCODE);
 		this.packetType = PacketType.OUTBOUND;
+		this.buffer.writeByte(username.getBytes().length);
+		this.buffer.writeBytes(username.getBytes());
 		this.hasVhost = false;
 	}
 	
-	private HandshakePacket(String virtualHost) {
+	private HandshakePacket(String username, String virtualHost) {
 		super(OPCODE);
 		this.packetType = PacketType.OUTBOUND;
+		this.buffer.writeByte(username.getBytes().length);
+		this.buffer.writeBytes(username.getBytes());
 		this.buffer.writeByte(virtualHost.getBytes().length);
 		this.buffer.writeBytes(virtualHost.getBytes());
 		this.hasVhost = true;
@@ -62,11 +66,11 @@ public class HandshakePacket extends Packet {
 		return new HandshakePacket(status, playerColor);
 	}
 	
-	public static HandshakePacket newOutboundPacket() {
-		return new HandshakePacket();
+	public static HandshakePacket newOutboundPacket(String username) {
+		return new HandshakePacket(username);
 	}
 	
-	public static HandshakePacket newOutboundPacket(String virtualHost) {
-		return new HandshakePacket(virtualHost);
+	public static HandshakePacket newOutboundPacket(String username, String virtualHost) {
+		return new HandshakePacket(username, virtualHost);
 	}
 }

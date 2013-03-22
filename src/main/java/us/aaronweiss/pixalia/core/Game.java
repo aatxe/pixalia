@@ -13,7 +13,8 @@ import org.slf4j.LoggerFactory;
 import us.aaronweiss.pixalia.input.GameInputHandler;
 import us.aaronweiss.pixalia.lwjgl.BinaryFont;
 import us.aaronweiss.pixalia.lwjgl.Window;
-import us.aaronweiss.pixalia.tools.Constants;
+import us.aaronweiss.pixalia.net.packets.HandshakePacket;
+import us.aaronweiss.pixalia.tools.Configuration;
 import us.aaronweiss.pixalia.tools.Utils;
 
 import com.google.common.eventbus.AsyncEventBus;
@@ -34,17 +35,20 @@ public class Game extends Window {
 		BinaryFont.setDefault(new BinaryFont("rsc/Unifont.bin"));
 		this.ui = new UI(width, height);
 		this.world = new World();
-		if (!Constants.OFFLINE_MODE)
+		if (!Configuration.offlineMode())
 			this.network = new Network(this);
 		else 
 			this.network = null;
 		this.player = new Player(Utils.getLocalHostname());
 		this.input = new GameInputHandler(this);
 		this.world.put(player.getHostname(), player);
+		this.network.connect("127.0.0.1", 2832);
 	}
 
 	@Override
 	public void init() {
+		if (!Configuration.offlineMode())
+			this.network.write(HandshakePacket.newOutboundPacket(Utils.getUsername()));
 		GL11.glClearColor(0.4f, 0.6f, 0.9f, 1.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		this.setupWorldView();
@@ -113,7 +117,7 @@ public class Game extends Window {
 	public static EventBus getEventBus() {
 		if (Game.eventBus == null) {
 			int cores = Runtime.getRuntime().availableProcessors();
-			ThreadPoolExecutor pool = new ThreadPoolExecutor(cores, Constants.MAX_EVENT_THREADS, Constants.EVENT_THREAD_KEEPALIVE, TimeUnit.MILLISECONDS, new PriorityBlockingQueue<Runnable>());
+			ThreadPoolExecutor pool = new ThreadPoolExecutor(cores, Configuration.maxEventThreads(), Configuration.eventThreadKeepAlive(), TimeUnit.MILLISECONDS, new PriorityBlockingQueue<Runnable>());
 			Game.eventBus = new AsyncEventBus(pool);
 			logger.info("AsyncEventBus created with " + cores + " cores.");
 		}

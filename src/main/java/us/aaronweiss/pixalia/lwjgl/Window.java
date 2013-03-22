@@ -1,12 +1,15 @@
 package us.aaronweiss.pixalia.lwjgl;
 
 import java.util.concurrent.TimeUnit;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.Util;
+
 import us.aaronweiss.pixalia.tools.Constants;
+
 import com.google.common.base.Stopwatch;
 
 public abstract class Window {
@@ -48,12 +51,12 @@ public abstract class Window {
 		Stopwatch updateTimer = new Stopwatch();
 		fpsTimer.start();
 		while (isRunning && !Display.isCloseRequested()) {
-			this.update((updateTimer.elapsedMillis() / 1000f) * Constants.TICKS_PER_SECOND);
+			this.update((updateTimer.elapsed(TimeUnit.MILLISECONDS) / 1000f) * Constants.TICKS_PER_SECOND);
 			updateTimer.reset();
 			updateTimer.start();
 			this.render();
 			frameCount++;
-			if (fpsTimer.elapsedTime(TimeUnit.SECONDS) >= 1) {
+			if (fpsTimer.elapsed(TimeUnit.SECONDS) >= 1) {
 				fps = frameCount;
 				frameCount = 0;
 				fpsTimer.reset();
@@ -63,8 +66,10 @@ public abstract class Window {
 			Display.update();
 			Display.sync(60);
 		}
-		updateTimer.stop();
-		fpsTimer.stop();
+		try {
+			updateTimer.stop();
+			fpsTimer.stop();
+		} catch (IllegalStateException e) {}
 		this.dispose();
 		Display.destroy();
 	}

@@ -15,7 +15,7 @@ import us.aaronweiss.pixalia.tools.Constants;
 public class ChatNotifier implements Renderable {
 	private final float[] stdColor = new float[]{0.4f, 0.4f, 0.4f, 0.4f};
 	private final float[] newColor = new float[]{0.2f, 0.8f, 0.2f, 0.6f};
-	private boolean newMessage = true;
+	private boolean newMessage = false;
 	private int vbo = -1;
 	
 	public void render() {
