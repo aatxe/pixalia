@@ -1,12 +1,23 @@
 package us.aaronweiss.pixalia.net;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOutboundMessageHandlerAdapter;
-import us.aaronweiss.pixalia.net.packets.Packet;
+import io.netty.handler.codec.MessageToByteEncoder;
 
-public class PacketEncoder extends ChannelOutboundMessageHandlerAdapter<Packet> {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import us.aaronweiss.pixalia.net.packets.Packet;
+import us.aaronweiss.pixalia.tools.Utils;
+
+public class PacketEncoder extends MessageToByteEncoder<Packet> {
+	private static final Logger logger = LoggerFactory.getLogger(PacketEncoder.class);
+
 	@Override
-	protected void flush(ChannelHandlerContext ctx, Packet msg) throws Exception {
-		ctx.nextOutboundByteBuffer().writeBytes(msg.array());
+	protected void encode(ChannelHandlerContext ctx, Packet msg, ByteBuf out) throws Exception {
+		ByteBuf buf = msg.buf();
+		buf = buf.capacity(buf.readableBytes());
+		logger.info(Utils.toHexString(buf.array()));
+		out.writeBytes(buf);
 	}
 }

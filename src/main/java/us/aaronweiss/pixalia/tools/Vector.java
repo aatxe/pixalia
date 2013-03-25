@@ -65,11 +65,11 @@ public class Vector {
 		if (!o.getClass().equals(Vector.class))
 			return false;
 		Vector v = (Vector) o;
-		return comparef(v.w, w) && comparef(v.x, x) && comparef(v.y, y) && comparef(v.z, y);
+		return comparef(v.x, x) && comparef(v.y, y) && comparef(v.z, z) && comparef(v.w, w);
 	}
 	
 	private static boolean comparef(float a, float b) {
-		return (a - .05 < b && a + .05 > b);
+		return (a - .1 < b && a + .1 > b);
 	}
 	
 	public float[] asFloatArray(int n) {

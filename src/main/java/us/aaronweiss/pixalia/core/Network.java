@@ -50,8 +50,8 @@ public class Network {
 				pipeline.addLast("packet_decoder", new PacketDecoder());
 				
 				// Encoder
-				pipeline.addLast("packet_encoder", new PacketEncoder());
 				pipeline.addLast("buffer_length_encoder", new BufferLengthEncoder());
+				pipeline.addLast("packet_encoder", new PacketEncoder());
 			}
 		});
 		bootstrap.option(ChannelOption.TCP_NODELAY, true);
@@ -61,7 +61,7 @@ public class Network {
 	public void connect(InetSocketAddress server) throws ChannelException {
 		if (this.session != null) {
 			logger.error("Network session already in progress.");
-			logger.debug("session: " + this.session.toString() + " - " + this.session.remoteAddress().toString());
+			logger.error("session: " + this.session.toString() + " - " + this.session.remoteAddress().toString());
 			throw new ChannelException("Network session already in progress.");
 		}
 		ChannelFuture cf = this.bootstrap.connect(server);

@@ -27,6 +27,10 @@ public abstract class Packet {
 		return this.buffer.array();
 	}
 	
+	public ByteBuf buf() {
+		return this.buffer;
+	}
+	
 	public PacketType type() {
 		return this.packetType;
 	}
