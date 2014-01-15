@@ -11,4 +11,5 @@ public class Constants {
 	public static final boolean OFFLINE_MODE = true;
 	public static final double TICKS_FOR_MOVEMENT_UPDATE = 1;
 	public static final int MAX_FRAME_LENGTH = 300;
+	public static final int HANDLER_COUNT = 8;
 }

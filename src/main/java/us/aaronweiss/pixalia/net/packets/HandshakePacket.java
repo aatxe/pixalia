@@ -13,6 +13,7 @@ public class HandshakePacket extends Packet {
 		this.buffer.writeBoolean(status);
 		this.buffer.writeBytes(playerColor.asByteBuf(4));
 		this.hasVhost = false;
+		trim();
 	}
 	
 	private HandshakePacket(String username) {
@@ -21,6 +22,7 @@ public class HandshakePacket extends Packet {
 		this.buffer.writeByte(username.getBytes().length);
 		this.buffer.writeBytes(username.getBytes());
 		this.hasVhost = false;
+		trim();
 	}
 	
 	private HandshakePacket(String username, String virtualHost) {
@@ -31,11 +33,12 @@ public class HandshakePacket extends Packet {
 		this.buffer.writeByte(virtualHost.getBytes().length);
 		this.buffer.writeBytes(virtualHost.getBytes());
 		this.hasVhost = true;
+		trim();
 	}
 	
 	public boolean status() {
 		this.ready();
-		if (this.packetType.is(PacketType.OUTBOUND)) {
+		if (this.packetType.is(PacketType.INBOUND)) {
 			return this.buffer.readBoolean();
 		}
 		return false;
@@ -43,7 +46,7 @@ public class HandshakePacket extends Packet {
 	
 	public Vector color() {
 		this.ready();
-		if (this.packetType.is(PacketType.OUTBOUND)) {
+		if (this.packetType.is(PacketType.INBOUND)) {
 			this.buffer.readBoolean();
 			return Vector.fromByteBuf(4, this.buffer);
 		}

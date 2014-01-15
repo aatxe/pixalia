@@ -12,6 +12,7 @@ public class MessagePacket extends Packet {
 		this.buffer.writeBytes(hostname.getBytes());
 		this.buffer.writeByte(message.getBytes().length);
 		this.buffer.writeBytes(message.getBytes());
+		trim();
 	}
 	
 	private MessagePacket(String message) {
@@ -19,6 +20,7 @@ public class MessagePacket extends Packet {
 		this.packetType = PacketType.OUTBOUND;
 		this.buffer.writeByte(message.getBytes().length);
 		this.buffer.writeBytes(message.getBytes());
+		trim();
 	}
 	
 	public String hostname() {

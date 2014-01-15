@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+import io.netty.handler.codec.ByteToMessageDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,14 +18,15 @@ import us.aaronweiss.pixalia.net.packets.VHostChangeRequestPacket;
 import us.aaronweiss.pixalia.tools.Utils;
 import us.aaronweiss.pixalia.tools.Vector;
 
-public class PacketDecoder extends ChannelInboundHandlerAdapter {
+import java.util.List;
+
+public class PacketDecoder extends ByteToMessageDecoder {
     private static final Logger logger = LoggerFactory.getLogger(PacketDecoder.class);
-    
+
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		ByteBuf in = (ByteBuf) msg;
+	public void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
 		byte opcode = in.readByte();
-		Packet event;
+		Packet event = null;
 		logger.info("Packet recieved. (Opcode: " + opcode + ")");
 		switch (opcode) {
 		case HandshakePacket.OPCODE:
@@ -44,7 +46,8 @@ public class PacketDecoder extends ChannelInboundHandlerAdapter {
 			break;
 		default:
 			logger.error("Unexpected packet recieved. (Opcode: " + opcode + ")");
-			event = null;
 		}
+		if (event != null)
+			out.add(event);
 	}
 }

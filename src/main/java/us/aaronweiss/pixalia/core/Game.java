@@ -22,28 +22,26 @@ import com.google.common.eventbus.EventBus;
 
 public class Game extends Window {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
-	private final EventBus eventBus;
 	private final Player player;
 	private final World world;
 	private final Network network;
 	private final UI ui;
 	private final GameInputHandler input;
 	
-	public Game() throws LWJGLException, IOException {
+	public Game() throws LWJGLException, IOException, InterruptedException {
 		super(800, 600);
 		this.setTitle("Pixalia");
 		BinaryFont.setDefault(new BinaryFont("rsc/Unifont.bin"));
 		int cores = Runtime.getRuntime().availableProcessors();
 		ThreadPoolExecutor pool = new ThreadPoolExecutor(cores, Configuration.maxEventThreads(), Configuration.eventThreadKeepAlive(), TimeUnit.MILLISECONDS, new PriorityBlockingQueue<Runnable>());
-		this.eventBus = new AsyncEventBus(pool);
 		logger.info("AsyncEventBus created with " + cores + " cores.");
 		this.ui = new UI(width, height);
 		this.world = new World();
+		this.player = new Player(Utils.getLocalHostname());
 		if (!Configuration.offlineMode())
 			this.network = new Network(this);
 		else 
 			this.network = null;
-		this.player = new Player(Utils.getLocalHostname());
 		this.input = new GameInputHandler(this);
 		this.world.put(player.getHostname(), player);
 		this.network.connect("127.0.0.1", 2832);
@@ -116,9 +114,5 @@ public class Game extends Window {
 	
 	public UI getUI() {
 		return this.ui;
-	}
-	
-	public EventBus getEventBus() {
-		return this.eventBus;
 	}
 }

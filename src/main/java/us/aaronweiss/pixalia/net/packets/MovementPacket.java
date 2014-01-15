@@ -10,6 +10,7 @@ public class MovementPacket extends Packet {
 		super(OPCODE);
 		this.packetType = PacketType.OUTBOUND;
 		this.buffer.writeBytes(position.asByteBuf(2));
+		trim();
 	}
 	
 	private MovementPacket(String hostname, Vector position) {
@@ -18,6 +19,7 @@ public class MovementPacket extends Packet {
 		this.buffer.writeByte(hostname.getBytes().length);
 		this.buffer.writeBytes(hostname.getBytes());
 		this.buffer.writeBytes(position.asByteBuf(2));
+		trim();
 	}
 	
 	public String hostname() {
