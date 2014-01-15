@@ -22,7 +22,7 @@ import com.google.common.eventbus.EventBus;
 
 public class Game extends Window {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
-	private static EventBus eventBus;
+	private final EventBus eventBus;
 	private final Player player;
 	private final World world;
 	private final Network network;
@@ -33,6 +33,10 @@ public class Game extends Window {
 		super(800, 600);
 		this.setTitle("Pixalia");
 		BinaryFont.setDefault(new BinaryFont("rsc/Unifont.bin"));
+		int cores = Runtime.getRuntime().availableProcessors();
+		ThreadPoolExecutor pool = new ThreadPoolExecutor(cores, Configuration.maxEventThreads(), Configuration.eventThreadKeepAlive(), TimeUnit.MILLISECONDS, new PriorityBlockingQueue<Runnable>());
+		this.eventBus = new AsyncEventBus(pool);
+		logger.info("AsyncEventBus created with " + cores + " cores.");
 		this.ui = new UI(width, height);
 		this.world = new World();
 		if (!Configuration.offlineMode())
@@ -114,13 +118,7 @@ public class Game extends Window {
 		return this.ui;
 	}
 	
-	public static EventBus getEventBus() {
-		if (Game.eventBus == null) {
-			int cores = Runtime.getRuntime().availableProcessors();
-			ThreadPoolExecutor pool = new ThreadPoolExecutor(cores, Configuration.maxEventThreads(), Configuration.eventThreadKeepAlive(), TimeUnit.MILLISECONDS, new PriorityBlockingQueue<Runnable>());
-			Game.eventBus = new AsyncEventBus(pool);
-			logger.info("AsyncEventBus created with " + cores + " cores.");
-		}
-		return Game.eventBus;
+	public EventBus getEventBus() {
+		return this.eventBus;
 	}
 }

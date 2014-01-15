@@ -14,11 +14,11 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import us.aaronweiss.pixalia.net.BufferLengthDecoder;
-import us.aaronweiss.pixalia.net.BufferLengthEncoder;
 import us.aaronweiss.pixalia.net.PacketDecoder;
 import us.aaronweiss.pixalia.net.PacketEncoder;
 import us.aaronweiss.pixalia.net.listeners.HandshakeListener;
@@ -26,6 +26,7 @@ import us.aaronweiss.pixalia.net.listeners.MessageListener;
 import us.aaronweiss.pixalia.net.listeners.MovementListener;
 import us.aaronweiss.pixalia.net.packets.Packet;
 import us.aaronweiss.pixalia.tools.Configuration;
+import us.aaronweiss.pixalia.tools.Constants;
 
 public class Network {
 	private static final Logger logger = LoggerFactory.getLogger(Network.class);
@@ -33,9 +34,9 @@ public class Network {
 	private Channel session;
 	
 	public Network(Game game) {
-		Game.getEventBus().register(new HandshakeListener(game)); // 0x01
-		Game.getEventBus().register(new MovementListener(game)); // 0x02
-		Game.getEventBus().register(new MessageListener(game)); // 0x03
+		game.getEventBus().register(new HandshakeListener(game)); // 0x01
+		game.getEventBus().register(new MovementListener(game)); // 0x02
+		game.getEventBus().register(new MessageListener(game)); // 0x03
 		// TODO: register moar listeners (virtual host support)
 		logger.info("Registered listeners with event bus.");
 		bootstrap = new Bootstrap();
@@ -45,12 +46,10 @@ public class Network {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ChannelPipeline pipeline = ch.pipeline();
-				// Decoders
-				pipeline.addLast("buffer_length_decoder", new BufferLengthDecoder());
+				pipeline.addLast("buffer_length_encoder", new LengthFieldPrepender(2));
+				pipeline.addLast("buffer_length_decoder", new LengthFieldBasedFrameDecoder(Constants.MAX_FRAME_LENGTH, 0, 2, 0, 2));
+
 				pipeline.addLast("packet_decoder", new PacketDecoder());
-				
-				// Encoder
-				pipeline.addLast("buffer_length_encoder", new BufferLengthEncoder());
 				pipeline.addLast("packet_encoder", new PacketEncoder());
 			}
 		});
@@ -58,19 +57,18 @@ public class Network {
 		logger.info("Configured networking pipeline, ready to connect.");
 	}
 	
-	public void connect(InetSocketAddress server) throws ChannelException {
+	public void connect(InetSocketAddress server) throws ChannelException, InterruptedException {
 		if (this.session != null) {
 			logger.error("Network session already in progress.");
 			logger.error("session: " + this.session.toString() + " - " + this.session.remoteAddress().toString());
 			throw new ChannelException("Network session already in progress.");
 		}
-		ChannelFuture cf = this.bootstrap.connect(server);
-		cf.syncUninterruptibly();
-		this.session = cf.channel();
+
+		this.session = this.bootstrap.connect(server).sync().channel();
 		logger.info("Connected to " + server.getHostName() + ":" + server.getPort());
 	}
 	
-	public void connect(String server, int port) throws ChannelException {
+	public void connect(String server, int port) throws ChannelException, InterruptedException {
 		this.connect(new InetSocketAddress(server, port));
 	}
 	
@@ -79,7 +77,7 @@ public class Network {
 			return;
 		logger.info("Packet written.");
 		try {
-			this.session.write(packet);
+			this.session.writeAndFlush(packet);
 		} catch (NullPointerException e) {
 			throw new IllegalStateException("Network is not connected.", e);
 		}

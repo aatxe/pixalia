@@ -2,7 +2,7 @@ package us.aaronweiss.pixalia.net;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundMessageHandlerAdapter;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +17,12 @@ import us.aaronweiss.pixalia.net.packets.VHostChangeRequestPacket;
 import us.aaronweiss.pixalia.tools.Utils;
 import us.aaronweiss.pixalia.tools.Vector;
 
-public class PacketDecoder extends ChannelInboundMessageHandlerAdapter<ByteBuf> {
+public class PacketDecoder extends ChannelInboundHandlerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(PacketDecoder.class);
     
 	@Override
-	protected void messageReceived(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		ByteBuf in = (ByteBuf) msg;
 		byte opcode = in.readByte();
 		Packet event;
 		logger.info("Packet recieved. (Opcode: " + opcode + ")");
@@ -45,7 +46,5 @@ public class PacketDecoder extends ChannelInboundMessageHandlerAdapter<ByteBuf> 
 			logger.error("Unexpected packet recieved. (Opcode: " + opcode + ")");
 			event = null;
 		}
-		if (event != null)
-			Game.getEventBus().post(event);
 	}
 }
