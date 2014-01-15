@@ -33,16 +33,16 @@ public class PacketDecoder extends ByteToMessageDecoder {
 			event = HandshakePacket.newInboundPacket(in.readBoolean(), Vector.fromByteBuf(4, in));
 			break;
 		case MovementPacket.OPCODE:
-			event = MovementPacket.newInboundPacket(Utils.readString(in.readInt(), in), Vector.fromByteBuf(2, in));
+			event = MovementPacket.newInboundPacket(Utils.readString(in.readByte(), in), Vector.fromByteBuf(2, in));
 			break;
 		case MessagePacket.OPCODE:
-			event = MessagePacket.newInboundPacket(Utils.readString(in.readInt(), in), Utils.readString(in.readInt(), in));
+			event = MessagePacket.newInboundPacket(Utils.readString(in.readByte(), in), Utils.readString(in.readInt(), in));
 			break;
 		case VHostChangeRequestPacket.OPCODE:
 			event = VHostChangeRequestPacket.newInboundPacket(in.readBoolean());
 			break;
 		case VHostChangePacket.OPCODE:
-			event = VHostChangePacket.newInboundPacket(Utils.readString(in.readInt(), in), Utils.readString(in.readInt(), in));
+			event = VHostChangePacket.newInboundPacket(Utils.readString(in.readByte(), in), Utils.readString(in.readByte(), in));
 			break;
 		default:
 			logger.error("Unexpected packet recieved. (Opcode: " + opcode + ")");
