@@ -58,7 +58,7 @@ public class GameInputHandler {
 	
 	private void onlineChat(float ticksPassed) {
 		String message = this.chatInput.getText();
-		if (!message.equals(" ")) {
+		if (!message.equals(" ") && !message.equals("")) {
 			logger.debug(this.player.getHostname() + ": " + message);
 			network.write(MessagePacket.newOutboundPacket(this.chatInput.getText()));
 			this.chatInput.reset();

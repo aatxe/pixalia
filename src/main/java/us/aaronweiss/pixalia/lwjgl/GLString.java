@@ -22,17 +22,6 @@ public class GLString implements Renderable {
 	public GLString(String value, BinaryFont font) {
 		this.value = value;
 		this.font = font;
-		this.vbo = this.createVBO();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, 8 * Constants.SIZEOF_FLOAT, GL15.GL_DYNAMIC_DRAW);
-		ByteBuffer buffer = GL15.glMapBuffer(GL15.GL_ARRAY_BUFFER, GL15.GL_WRITE_ONLY, null);
-		FloatBuffer buf = buffer.order(ByteOrder.nativeOrder()).asFloatBuffer();
-		buf.put(new float[]{0f, 0f});
-		buf.put(new float[]{0f, 1f});
-		buf.put(new float[]{1f, 1f});
-		buf.put(new float[]{1f, 0f});
-		GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
-		this.init();
 	}
 	
 	public String getValue() {
@@ -48,6 +37,19 @@ public class GLString implements Renderable {
 	}
 	
 	public void render(float x, float y) {
+		if (vbo < 0) {
+			this.vbo = this.createVBO();
+			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, 8 * Constants.SIZEOF_FLOAT, GL15.GL_DYNAMIC_DRAW);
+			ByteBuffer buffer = GL15.glMapBuffer(GL15.GL_ARRAY_BUFFER, GL15.GL_WRITE_ONLY, null);
+			FloatBuffer buf = buffer.order(ByteOrder.nativeOrder()).asFloatBuffer();
+			buf.put(new float[]{0f, 0f});
+			buf.put(new float[]{0f, 1f});
+			buf.put(new float[]{1f, 1f});
+			buf.put(new float[]{1f, 0f});
+			GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
+			this.init();
+		}
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 		GL11.glEnable(GL11.GL_BLEND);
