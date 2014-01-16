@@ -5,7 +5,7 @@ import us.aaronweiss.pixalia.tools.Utils;
 import us.aaronweiss.pixalia.tools.Vector;
 
 public class PlayerJoinPacket extends Packet {
-	public static final byte OPCODE = 0x05;
+	public static final byte OPCODE = 0x06;
 
 	private PlayerJoinPacket(String hostname, Vector playerColor) {
 		super(OPCODE);
@@ -18,7 +18,7 @@ public class PlayerJoinPacket extends Packet {
 
 	private PlayerJoinPacket(String hostname, Vector playerColor, Vector position) {
 		super(OPCODE);
-		this.packetType = PacketType.OUTBOUND;
+		this.packetType = PacketType.INBOUND;
 		this.buffer.writeByte(hostname.getBytes().length);
 		this.buffer.writeBytes(hostname.getBytes());
 		this.buffer.writeBytes(playerColor.asByteBuf(4));
@@ -56,7 +56,8 @@ public class PlayerJoinPacket extends Packet {
 		if (this.packetType.is(PacketType.INBOUND)) {
 			Utils.readString(this.buffer.readByte(), this.buffer);
 			Vector.fromByteBuf(4, this.buffer);
-			return Vector.fromByteBuf(2, this.buffer);
+			if (this.buffer.readableBytes() > 0)
+				return Vector.fromByteBuf(2, this.buffer);
 		}
 		return null;
 	}

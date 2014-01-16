@@ -9,22 +9,18 @@ import us.aaronweiss.pixalia.net.packets.Packet;
 
 public class MovementHandler extends PacketHandler {
 	public static final byte OPCODE = MovementPacket.OPCODE;
-	private final World world;
-	private final Player player;
 
 	public MovementHandler(Game game) {
-		super(game.getNetwork());
-		this.world = game.getWorld();
-		player = game.getPlayer();
+		super(game);
 	}
 
 	@Override
 	public void process(Packet event) {
 		MovementPacket in = (MovementPacket) event;
-		Pixal p = this.world.get(in.hostname());
+		Pixal p = game.getWorld().get(in.hostname());
 		if (p == null)
-			p = player;
+			p = game.getPlayer();
 		p.setPosition(in.position());
-		this.world.put(in.hostname(), p);
+		game.getWorld().put(in.hostname(), p);
 	}
 }

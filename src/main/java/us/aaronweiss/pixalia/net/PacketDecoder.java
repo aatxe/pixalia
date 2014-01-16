@@ -9,12 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import us.aaronweiss.pixalia.core.Game;
-import us.aaronweiss.pixalia.net.packets.HandshakePacket;
-import us.aaronweiss.pixalia.net.packets.MessagePacket;
-import us.aaronweiss.pixalia.net.packets.MovementPacket;
-import us.aaronweiss.pixalia.net.packets.Packet;
-import us.aaronweiss.pixalia.net.packets.VHostChangePacket;
-import us.aaronweiss.pixalia.net.packets.VHostChangeRequestPacket;
+import us.aaronweiss.pixalia.net.packets.*;
 import us.aaronweiss.pixalia.tools.Utils;
 import us.aaronweiss.pixalia.tools.Vector;
 
@@ -36,13 +31,21 @@ public class PacketDecoder extends ByteToMessageDecoder {
 			event = MovementPacket.newInboundPacket(Utils.readString(in.readByte(), in), Vector.fromByteBuf(2, in));
 			break;
 		case MessagePacket.OPCODE:
-			event = MessagePacket.newInboundPacket(Utils.readString(in.readByte(), in), Utils.readString(in.readInt(), in));
+			event = MessagePacket.newInboundPacket(Utils.readString(in.readByte(), in), Utils.readString(in.readByte(), in));
 			break;
 		case VHostChangeRequestPacket.OPCODE:
 			event = VHostChangeRequestPacket.newInboundPacket(in.readBoolean());
 			break;
 		case VHostChangePacket.OPCODE:
 			event = VHostChangePacket.newInboundPacket(Utils.readString(in.readByte(), in), Utils.readString(in.readByte(), in));
+			break;
+		case PlayerJoinPacket.OPCODE:
+			String hostname = Utils.readString(in.readByte(), in);
+			Vector color = Vector.fromByteBuf(4, in);
+			if (in.readableBytes() > 2)
+				event = PlayerJoinPacket.newInboundPacket(hostname, color, Vector.fromByteBuf(2, in));
+			else
+				event = PlayerJoinPacket.newInboundPacket(hostname, color);
 			break;
 		default:
 			logger.error("Unexpected packet recieved. (Opcode: " + opcode + ")");

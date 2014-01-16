@@ -13,7 +13,7 @@ import us.aaronweiss.pixalia.tools.Constants;
 
 public class World extends HashMap<String, Pixal> implements Renderable {
 	private static final long serialVersionUID = 3713274279007718811L;
-	private int vbo = -1;
+	private int vbo = -1, lastSize = 0;
 	
 	public void render() {
 		GL11.glClearColor(0.4f, 0.6f, 0.9f, 1.0f);
@@ -22,6 +22,9 @@ public class World extends HashMap<String, Pixal> implements Renderable {
 			if (vbo <= 0) {
 				vbo = this.createVBO();
 				this.vboBufferData(vbo);
+			} else if (this.size() != lastSize) {
+				this.vboBufferData(vbo);
+				lastSize = this.size();
 			}
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 			ByteBuffer buffer = GL15.glMapBuffer(GL15.GL_ARRAY_BUFFER, GL15.GL_WRITE_ONLY, null);

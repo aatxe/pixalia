@@ -24,6 +24,7 @@ import us.aaronweiss.pixalia.net.PacketEncoder;
 import us.aaronweiss.pixalia.net.PixaliaClientHandler;
 import us.aaronweiss.pixalia.net.listeners.HandshakeHandler;
 import us.aaronweiss.pixalia.net.listeners.MovementHandler;
+import us.aaronweiss.pixalia.net.listeners.PlayerJoinHandler;
 import us.aaronweiss.pixalia.net.packets.Packet;
 import us.aaronweiss.pixalia.tools.Configuration;
 import us.aaronweiss.pixalia.tools.Constants;
@@ -40,6 +41,7 @@ public class Network {
 		handler = new PixaliaClientHandler();
 		handler.register(HandshakeHandler.OPCODE, new HandshakeHandler(game));
 		handler.register(MovementHandler.OPCODE, new MovementHandler(game));
+		handler.register(PlayerJoinHandler.OPCODE, new PlayerJoinHandler(game));
 		// TODO: register moar handlers with client.
 		bootstrap.group(new NioEventLoopGroup())
 				.channel(NioSocketChannel.class)

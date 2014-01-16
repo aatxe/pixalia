@@ -1,13 +1,14 @@
 package us.aaronweiss.pixalia.net.listeners;
 
+import us.aaronweiss.pixalia.core.Game;
 import us.aaronweiss.pixalia.core.Network;
 import us.aaronweiss.pixalia.net.packets.Packet;
 
 public abstract class PacketHandler {
-	protected final Network network;
+	protected final Game game;
 
-	public PacketHandler(Network network) {
-		this.network = network;
+	public PacketHandler(Game game) {
+		this.game = game;
 	}
 
 	public abstract void process(Packet event);

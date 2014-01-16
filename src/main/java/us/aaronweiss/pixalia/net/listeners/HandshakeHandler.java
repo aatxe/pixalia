@@ -9,13 +9,9 @@ import us.aaronweiss.pixalia.net.packets.Packet;
 
 public class HandshakeHandler extends PacketHandler {
 	public static final byte OPCODE = HandshakePacket.OPCODE;
-	private final Player player;
-	private final Game game;
-	
+
 	public HandshakeHandler(Game game) {
-		super(game.getNetwork());
-		this.game = game;
-		this.player = game.getPlayer();
+		super(game);
 	}
 
 	@Override
@@ -23,6 +19,6 @@ public class HandshakeHandler extends PacketHandler {
 		HandshakePacket in = (HandshakePacket) event;
 		if (!in.status())
 			this.game.close();
-		this.player.setColor(in.color());
+		game.getPlayer().setColor(in.color());
 	}
 }

@@ -8,9 +8,17 @@ public class Pixal {
 	protected Vector color;
 	
 	public Pixal(String hostname) {
+		this(hostname, new Vector(0f, 0f), new Vector(0f, 0f, 0f, 1f));
+	}
+
+	public Pixal(String hostname, Vector color) {
+		this(hostname, new Vector(0f, 0f), color);
+	}
+
+	public Pixal(String hostname, Vector position, Vector color) {
 		this.hostname = hostname;
-		this.position = new Vector(0f, 0f);
-		this.color = new Vector(0f, 0f, 0f, 1f);
+		this.position = position;
+		this.color = color;
 	}
 	
 	public String getHostname() {
