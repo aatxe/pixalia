@@ -47,6 +47,9 @@ public class PacketDecoder extends ByteToMessageDecoder {
 			else
 				event = PlayerJoinPacket.newInboundPacket(hostname, color);
 			break;
+		case PlayerQuitPacket.OPCODE:
+			event = PlayerQuitPacket.newInboundPacket(Utils.readString(in.readByte(), in));
+			break;
 		default:
 			logger.error("Unexpected packet recieved. (Opcode: " + opcode + ")");
 		}

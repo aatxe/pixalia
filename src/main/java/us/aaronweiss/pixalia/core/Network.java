@@ -22,10 +22,7 @@ import org.slf4j.LoggerFactory;
 import us.aaronweiss.pixalia.net.PacketDecoder;
 import us.aaronweiss.pixalia.net.PacketEncoder;
 import us.aaronweiss.pixalia.net.PixaliaClientHandler;
-import us.aaronweiss.pixalia.net.listeners.HandshakeHandler;
-import us.aaronweiss.pixalia.net.listeners.MessageHandler;
-import us.aaronweiss.pixalia.net.listeners.MovementHandler;
-import us.aaronweiss.pixalia.net.listeners.PlayerJoinHandler;
+import us.aaronweiss.pixalia.net.listeners.*;
 import us.aaronweiss.pixalia.net.packets.Packet;
 import us.aaronweiss.pixalia.tools.Configuration;
 import us.aaronweiss.pixalia.tools.Constants;
@@ -44,6 +41,7 @@ public class Network {
 		handler.register(MovementHandler.OPCODE, new MovementHandler(game));
 		handler.register(MessageHandler.OPCODE, new MessageHandler(game));
 		handler.register(PlayerJoinHandler.OPCODE, new PlayerJoinHandler(game));
+		handler.register(PlayerQuitHandler.OPCODE, new PlayerQuitHandler(game));
 		// TODO: register moar handlers with client.
 		bootstrap.group(new NioEventLoopGroup())
 				.channel(NioSocketChannel.class)

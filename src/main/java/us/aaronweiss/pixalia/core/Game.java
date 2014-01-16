@@ -14,6 +14,7 @@ import us.aaronweiss.pixalia.input.GameInputHandler;
 import us.aaronweiss.pixalia.lwjgl.BinaryFont;
 import us.aaronweiss.pixalia.lwjgl.Window;
 import us.aaronweiss.pixalia.net.packets.HandshakePacket;
+import us.aaronweiss.pixalia.net.packets.PlayerQuitPacket;
 import us.aaronweiss.pixalia.tools.Configuration;
 import us.aaronweiss.pixalia.tools.Utils;
 
@@ -78,6 +79,11 @@ public class Game extends Window {
 	public void dispose() {
 		this.world.dispose();
 		this.ui.dispose();
+		network.write(PlayerQuitPacket.newOutboundPacket());
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {}
+		network.disconnect();
 	}
 	
 	private void setupWorldView() {

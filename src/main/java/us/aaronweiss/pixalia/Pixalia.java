@@ -23,6 +23,7 @@ public class Pixalia {
 			Game game = new Game();
 			logger.info("OpenGL Version: " + GL11.glGetString(GL11.GL_VERSION));
 			game.open();
+			System.exit(0);
 		} catch (Exception e) {
 			logger.error("An unexpected error has occurred.", e);
 		}
